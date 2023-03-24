@@ -2,17 +2,28 @@ package it.unibo.scafi.core.vm
 
 import it.unibo.scafi.core.{Path, Slot}
 
+// VMStatus is an immutable object. Each update creates a new VMStatus.
 trait VMStatus {
+  // The current path
   val path: Path
+  // ???
   val index: Int
+  // ???
   val neighbour: Option[Int]
 
+  // Returns true if the field 'neighbourg' is defined, false otherwise
   def isFolding: Boolean
+  // update the VMStatus by setting the field 'neighbourg' to the parameter 'id'
   def foldInto(id: Option[Int]): VMStatus
+  // Update the VMStatus
   def foldOut(): VMStatus
+  // Push the specified Slot on the current path. Reset the index.
   def nest(s: Slot): VMStatus
+  // increment the current index
   def incIndex(): VMStatus
+  // push the current (path, index, neighbour) on the stack
   def push(): VMStatus
+  // pop the first element of the stack
   def pop(): VMStatus
 }
 
