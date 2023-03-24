@@ -6,9 +6,9 @@ import it.unibo.scafi.core.{Path, Slot}
 trait VMStatus {
   // The current path
   val path: Path
-  // ???
+  // TODO index of?
   val index: Int
-  // ???
+  // TODO What is this neighbour?
   val neighbour: Option[Int]
 
   // Returns true if the field 'neighbourg' is defined, false otherwise

@@ -8,6 +8,15 @@ trait Context {
   def readSlot[A](i: Int, p: Path): Option[A]
 }
 
+/**
+ * Context implementation
+ * @param selfId the ID of the device
+ * @param currentExports the exports of the neighbourgs
+ * @param localSensor TODO (in hello-scafi whether the sensor is the source)
+ * @param nbrSensor map each neighbourg to the corresponding value
+ *                  TODO (which value? in hello-scafi is the gradient)
+ *                  TODO (Why is it a Map[SensorId, Map[Int, Any]?)
+ */
 class ContextImpl(
     val selfId: Int,
     currentExports: Iterable[(Int, Export)],
