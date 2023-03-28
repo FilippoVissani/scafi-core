@@ -7,7 +7,7 @@ import scala.language.implicitConversions
 object RoundVMImplicits {
   implicit class RoundVMLogging(roundVM: RoundVM) extends RoundVM {
 
-    private val logger: Logger = Logger(getClass.getName)
+    private val logger: Logger = Logger("logback")
 
     override def factory: ExportFactory = {
       logStatus()
