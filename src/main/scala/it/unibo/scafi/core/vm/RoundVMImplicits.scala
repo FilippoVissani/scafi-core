@@ -1,6 +1,5 @@
 package it.unibo.scafi.core.vm
 import com.typesafe.scalalogging.Logger
-import it.unibo.scafi.core.vm.RoundVMImplicits.RoundVMLogging
 import it.unibo.scafi.core.{Context, Export, ExportFactory, Slot}
 
 import scala.language.implicitConversions
