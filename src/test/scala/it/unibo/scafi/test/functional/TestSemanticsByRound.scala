@@ -222,7 +222,6 @@ class TestSemanticsByRound extends AnyFunSpec with Matchers {
     // ACT + ASSERT (failure because not found)
     intercept[AnyRef](round(ctx1, foldhood(0)(_ + _)(nbrvar[Int]("xxx"))))
   }
-
   BUILTIN("minHood and minHood+, maxHood and maxHood+") {
     // ARRANGE
     val exp1 = Map(
