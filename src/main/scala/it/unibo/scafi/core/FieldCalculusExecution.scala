@@ -1,7 +1,6 @@
 package it.unibo.scafi.core
 
 import it.unibo.scafi.core.vm.RoundVM
-import it.unibo.scafi.core.vm.RoundVMImplicits._
 
 trait FieldCalculusExecution extends (Context => Export) with ConstructsSemantics {
   type MainResult
@@ -15,7 +14,7 @@ trait FieldCalculusExecution extends (Context => Export) with ConstructsSemantic
     round(c, main())
 
   final def round(c: Context, e: => Any = main()): Export = {
-    vm = RoundVMLogging(RoundVM(c, factory))
+    vm = RoundVM(c, factory)
     val result = e
     vm.registerRoot(result)
     vm.exportData
