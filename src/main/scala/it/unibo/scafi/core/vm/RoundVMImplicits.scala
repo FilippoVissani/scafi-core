@@ -95,7 +95,6 @@ object RoundVMImplicits {
 
     private def logStatus(): Unit = {
       logger.info("------------------------------------")
-      logger.info(Thread.currentThread().getStackTrace.last.getMethodName)
       logger.info("STATUS => " + roundVM.status)
       logger.info("CONTEXT => " + roundVM.context)
       logger.info("EXPORT STACK => " + roundVM.exportStack)
