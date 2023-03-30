@@ -9,9 +9,9 @@ trait ConstructsSemantics extends Language {
   override def mid(): Int = vm.self
 
   /**
-   * This method models the time evolution, and it is a construct for dinamically changing fields.
+   * This method models the time evolution, and it is a construct for dynamically changing fields.
    * Each device evaluates the application of its anonymous function 'fun' repeatedly in asynchronous rounds.
-   * At the first round the funciton is applied to the value 'init', then at each step the function is
+   * At the first round the function is applied to the value 'init', then at each step the function is
    * applied to the value obtained at previous step.
    *
    * For instance, rep(0){(x) => + (x,1))} counts how many rounds each device has computed.
@@ -21,7 +21,7 @@ trait ConstructsSemantics extends Language {
    * @tparam A the type of the computation.
    * @return the result of the computation.
    */
-  override def rep[A](init: => A)(fun: (A) => A): A = {
+  override def rep[A](init: => A)(fun: A => A): A = {
     vm.nest(Rep(vm.index))(write = vm.unlessFoldingOnOthers) {
       vm.locally {
         fun(vm.previousRoundVal.getOrElse(init))
@@ -31,7 +31,7 @@ trait ConstructsSemantics extends Language {
 
   /**
    * This method compute the expression on the node and get the result of the same expression for each neighbour.
-   * Then proceed to aggregate the results using the aggregate function given.
+   * Then proceed to aggregate the results using the given aggregating function.
    *
    * @param init the initial value
    * @param aggr the aggregate function
@@ -60,9 +60,9 @@ trait ConstructsSemantics extends Language {
 
   /**
    * This method models device-to-neighbour interaction, by returning a field of neighbouring field values.
-   * Each device is associated to value v, which maps any neighbour in the domain to its most recent available value
+   * Each device is associated to value returned by expr, which maps any neighbour in the domain to its most recent available value
    *
-   * @param expr the expression to compute.
+   * @param expr the expression to get the value of.
    * @tparam A the return type of the expression
    * @return the result of the computation in the neighbour.
    */
