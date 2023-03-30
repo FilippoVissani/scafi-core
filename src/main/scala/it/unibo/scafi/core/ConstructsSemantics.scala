@@ -8,6 +8,19 @@ trait ConstructsSemantics extends Language {
 
   override def mid(): Int = vm.self
 
+  /**
+   * This method models the time evolution, and it is a construct for dinamically changing fields.
+   * Each device evaluates the application of its anonymous function 'fun' repeatedly in asynchronous rounds.
+   * At the first round the funciton is applied to the value 'init', then at each step the function is
+   * applied to the value obtained at previous step.
+   *
+   * For instance, rep(0){(x) => + (x,1))} counts how many rounds each device has computed.
+   *
+   * @param init the initial value.
+   * @param fun the function to compute.
+   * @tparam A the type of the computation.
+   * @return the result of the computation.
+   */
   override def rep[A](init: => A)(fun: (A) => A): A = {
     vm.nest(Rep(vm.index))(write = vm.unlessFoldingOnOthers) {
       vm.locally {
@@ -16,6 +29,16 @@ trait ConstructsSemantics extends Language {
     }
   }
 
+  /**
+   * This method compute the expression on the node and get the result of the same expression for each neighbour.
+   * Then proceed to aggregate the results using the aggregate function given.
+   *
+   * @param init the initial value
+   * @param aggr the aggregate function
+   * @param expr the expression to execute on the neighbours
+   * @tparam A the return type of the computation
+   * @return the result of the aggregation
+   */
   override def foldhood[A](init: => A)(aggr: (A, A) => A)(expr: => A): A = {
     vm.nest(FoldHood(vm.index))(write = true) { // write export always for performance reason on nesting
       val nbrField = vm
@@ -35,6 +58,14 @@ trait ConstructsSemantics extends Language {
     }
   }
 
+  /**
+   * This method models device-to-neighbour interaction, by returning a field of neighbouring field values.
+   * Each device is associated to value v, which maps any neighbour in the domain to its most recent available value
+   *
+   * @param expr the expression to compute.
+   * @tparam A the return type of the expression
+   * @return the result of the computation in the neighbour.
+   */
   override def nbr[A](expr: => A): A =
     vm.nest(Nbr(vm.index))(write = vm.onlyWhenFoldingOnSelf) {
       vm.neighbour match {

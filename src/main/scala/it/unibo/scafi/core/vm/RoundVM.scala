@@ -7,30 +7,17 @@ import scala.util.control.Exception.handling
 
 trait RoundVM {
   def factory: ExportFactory
-
   def context: Context
-
   def exportStack: List[Export]
 
   def status: VMStatus
+  def exportData: Export = exportStack.head
+  def self: Int = context.selfId
+  def registerRoot(v: Any): Unit = exportData.put(factory.emptyPath(), v)
+  def neighbour: Option[Int] = status.neighbour
+  def index: Int = status.index
 
-  def exportData: Export =
-    exportStack.head
-
-  def self: Int =
-    context.selfId
-
-  def registerRoot(v: Any): Unit =
-    exportData.put(factory.emptyPath(), v)
-
-  def neighbour: Option[Int] =
-    status.neighbour
-
-  def index: Int =
-    status.index
-
-  def previousRoundVal[A]: Option[A] =
-    context.readSlot[A](self, status.path)
+  def previousRoundVal[A]: Option[A] = context.readSlot[A](self, status.path)
 
   def neighbourVal[A]: A = context
     .readSlot[A](neighbour.get, status.path)
@@ -48,13 +35,9 @@ trait RoundVM {
   }
 
   def foldedEval[A](expr: => A)(id: Int): Option[A]
-
   def nest[A](slot: Slot)(write: Boolean, inc: Boolean = true)(expr: => A): A
-
   def locally[A](a: => A): A
-
   def alignedNeighbours(): List[Int]
-
   def isolate[A](expr: => A): A
 
   def newExportStack: Any
@@ -98,7 +81,9 @@ object RoundVM {
 
     override def nest[A](slot: Slot)(write: Boolean, inc: Boolean = true)(expr: => A): A = {
       try {
+        // status(path, index, neighbour, stack)
         status = status.push().nest(slot) // prepare nested call
+        // status(path/slot, 0, neighbour, stack)
         if (write) {
           exportData.get(status.path).getOrElse(exportData.put(status.path, expr))
         } else {
